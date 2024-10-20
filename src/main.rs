@@ -1,4 +1,4 @@
-use actix_web::{get, App, HttpResponse, HttpServer};
+use actix_web::{get, post, App, HttpResponse, HttpServer};
 use std::cell::RefCell;
 use std::io::Result;
 
@@ -15,6 +15,16 @@ async fn hello() -> Result<HttpResponse> {
     });
 
     Ok(HttpResponse::Ok().body(list_data)) // Return the list as the body.
+}
+
+#[post("/add")]
+async fn add_item(item:String) -> Result<HttpResponse> {
+    LIST.with(|list| {
+        let mut list = list.borrow_mut();
+        list.push(item);
+    });
+
+    Ok(HttpResponse::Ok().body(LIST.with(|list| {})))
 }
 
 #[actix_web::main]
